@@ -1,0 +1,13 @@
+Welcome to the Snake game! I believe that nobody would not know about this game, but I will make a short description of this game...
+In this game, you as the snake needs to eat the required amount of foods within the time frame allocated while avoiding bumping into the obstacles and the snake itself. 
+
+================
+Controls:
+    Arrow keys - up: Moves up
+    Arrow keys - down: Moves down
+    Arrow keys - left: Moves left
+    Arrow keys - right: Moves right
+
+
+
+Now, please enjoy the game...
