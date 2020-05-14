@@ -7,17 +7,18 @@ namespace Snake
 {    
     class UserManagement
     {
-        /*string name;
-        int score;*/
         private List<User> userlist;
+
         public UserManagement() {
             userlist = new List<User>();
         }
 
+        //add user to the list
         public void AddUser(User user) {
             userlist.Add(user);
         }
 
+        //display the ranking record from the text file when user clears the game
         public void readRecord()
         {
             var path = "userRecord.txt";
@@ -31,11 +32,11 @@ namespace Snake
             }
         }
 
+        //add the user record into the text file
         public void recordUser() {
             var path = "userRecord.txt";
             StreamWriter sw = File.AppendText(path);
             foreach (User user in userlist) {
-                //using (StreamWriter sw = File.AppendText(path)) { sw.WriteLine(user.getName+'\t'+user.getScore.ToString()); }
                 sw.WriteLine(user.getName + '\t' + user.getScore.ToString() + '\t' + user.getTime.ToString());
             }
             sw.Close();

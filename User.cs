@@ -14,6 +14,7 @@ namespace Snake
             score = 0;
         }
 
+        //increase the user score by 1
         public void ScoreIncrement(int up) {
             score += up;
         }

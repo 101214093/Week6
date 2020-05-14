@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Snake
 {
-    class Position
+   struct Position
     {
         public int row;
         public int col;
@@ -13,18 +13,5 @@ namespace Snake
             this.row = row;
             this.col = col;
         }
-
-        public int GetRow
-        {
-            get { return this.row; }
-            set { this.row = value; }
-        }
-
-        public int GetCol
-        {
-            get { return this.col; }
-            set { this.col = value; }
-        }
-
     }
 }

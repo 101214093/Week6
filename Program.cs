@@ -13,13 +13,23 @@ namespace Snake
     {
         static void Main(string[] args)
         {
-            // initialize objects
+            //create users
             UserManagement userlist = new UserManagement();
             Console.WriteLine("Please enter your username: ");
             string userName = Console.ReadLine();
+            while (userName.Length == 0) {
+                Console.WriteLine("Please enter your username: ");
+                userName = Console.ReadLine();
+            }
             User user = new User(userName);
+
+            //select difficulty
             Console.WriteLine("Please select difficulty: [1]Easy ; [2]Normal ; [3]Hard");
             string difficulty = Console.ReadLine();
+            while (difficulty != "1" && difficulty != "2" && difficulty != "3") {
+                Console.WriteLine("Please select difficulty: [1]Easy ; [2]Normal ; [3]Hard");
+                difficulty = Console.ReadLine();
+            }
             Console.Clear();
 
             //help
@@ -63,44 +73,38 @@ namespace Snake
                 new Position(-1, 0), // up
             };
 
+            //change sleepTime parameter based on difficulty
             Console.BufferHeight = Console.WindowHeight;
-            double sleepTime = 100;
+            double sleepTime;
             if (difficulty == "1") {
                 sleepTime = 100;
             }
-            if (difficulty == "2")
+            else if (difficulty == "2")
             {
                 sleepTime = 70;
             }
-            if (difficulty == "3")
+            else
             {
                 sleepTime = 30;
             }
             lastFoodTime = Environment.TickCount;
 
             // Initialize obstacle and draw obstacles
-            Obstacle obs = new Obstacle();
-            int obsNum = 5;
+            int obsNum;
             if (difficulty == "1")
             {
                 obsNum = 5;
             }
-            if (difficulty == "2")
+            else if (difficulty == "2")
             {
                 obsNum = 10;
             }
-            if (difficulty == "3")
+            else
             {
                 obsNum = 30;
             }
-            obs.Generate_random_obstacle(obsNum);
+            Obstacle obs = new Obstacle(obsNum);
 
-            foreach (Position obstacle in obs.GetObsPos)
-            {
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.SetCursorPosition(obstacle.col, obstacle.row);
-                Console.Write("=");
-            }
 
             // Iniatitlize food and draw food
             Food food = new Food();
@@ -110,6 +114,7 @@ namespace Snake
             Snake snake = new Snake();
             snake.DrawSnake();
             int direct = right;
+
 
             // Begin timing.
             stopwatch.Start();
@@ -146,22 +151,7 @@ namespace Snake
                 // update snake position
                 Position snakeHead = snake.GetPos.Last();
                 Position nextDirection = directions[direct];
-
-
-
-                Position snakeNewHead = new Position(snakeHead.row + nextDirection.row,
-                    snakeHead.col + nextDirection.col);
-                /*Console.WriteLine("Col: "+ snakeNewHead.col+ " Row: "+ snakeNewHead.row);
-                Console.WriteLine("Window height: "+Console.WindowHeight+" Window width: "+Console.WindowWidth);
-                for (int i = 0; i < obs.GetObsPos.Count(); i++) {
-                    Console.WriteLine("OBS col: "+obs.GetObsPos[i].col + " OBS row: " + obs.GetObsPos[i].row);                    
-                }
-                Console.WriteLine("Food col: "+food.x+" Food row: "+food.y);
-                Console.WriteLine("Obs Count: "+obs.GetObsPos.Count());
-                if (obs.GetObsPos.Contains(snakeNewHead)) {
-                    Console.WriteLine("True");
-                }*/
-
+                Position snakeNewHead = new Position(snakeHead.row + nextDirection.row, snakeHead.col + nextDirection.col);
 
                 // check for snake if exceed the width or height
                 if (snakeNewHead.col < 0) {
@@ -177,16 +167,21 @@ namespace Snake
                     snakeNewHead.col = 0; 
                 }
 
-                
+
                 // check for snake collison with self or obstacles
-                if (snake.GetPos.Contains(snakeNewHead) || obs.GetObsPos.Contains(snakeNewHead))
+                if (snake.GetPos.Contains(snakeNewHead) || obs.GetObsPos.Contains(snakeHead))
                 {
-                    Console.SetCursorPosition(0, 0);
+                    bgm.Stop();
+                    Console.Clear();
+                    Console.SetCursorPosition(Console.WindowWidth/2 - 5, Console.WindowHeight/2);
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Game over!");
+                    Console.WriteLine("\n Press ENTER to quit");
+                    ConsoleKeyInfo keyInfo = Console.ReadKey();
+                    while (keyInfo.Key != ConsoleKey.Enter)
+                        keyInfo = Console.ReadKey();
                     return;
                 }
-               
 
                 // check for collision with the food
                 if (snakeNewHead.col == food.x && snakeNewHead.row == food.y)
@@ -197,11 +192,14 @@ namespace Snake
                     user.ScoreIncrement(1);
                     Console.SetCursorPosition(Console.WindowWidth - 10, Console.WindowHeight - 30);
                     Console.WriteLine("Score: " + user.getScore);
-                    //Console.WriteLine("Eaten");
                     bgm.Play();
+
+                    //spawn new food while increasing the length of the snake
                     food = new Food();
                     food.Generate_random_food();
+                    snake.AddSnake();
                 }
+
                 // draw the snake
                 Console.SetCursorPosition(snakeHead.col, snakeHead.row);
                 Console.ForegroundColor = ConsoleColor.DarkGray;
@@ -235,22 +233,22 @@ namespace Snake
                 Console.SetCursorPosition(last.col, last.row);
                 Console.Write(" ");
 
-                int goal = 5;
+                //change score needed to clear the game based on the difficulty
+                int goal;
                 if (difficulty == "1")
                 {
                     goal = 5;
                 }
-                if (difficulty == "2")
+                else if (difficulty == "2")
                 {
                     goal = 10;
                 }
-                if (difficulty == "3")
+                else
                 {
                     goal = 20;
                 }
 
-                // set winning condition score
-                //if (user.getScore == 1)                    
+                // set winning condition score               
                 if (user.getScore == goal)
                 {
                     Console.Clear();
