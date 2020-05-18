@@ -264,8 +264,8 @@ namespace Snake
 
                     //Record and display users data
                     var x = userlist.getUsers;
-                    userlist.sortRecord();
                     userlist.recordUser();
+                    userlist.sortRecord();
                     userlist.readRecord();
 
                     //Press enter to quit
