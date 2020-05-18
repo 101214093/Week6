@@ -2,15 +2,17 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Text;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Snake
 {    
     class UserManagement
     {
         private List<User> userlist;
-
+        private List<string> Sorted;
         public UserManagement() {
             userlist = new List<User>();
+            Sorted = new List<string>();
         }
 
         //add user to the list
@@ -37,20 +39,32 @@ namespace Snake
             var path = "userRecord.txt";
             StreamWriter sw = File.AppendText(path);
             foreach (User user in userlist) {
-                sw.WriteLine(user.getName + '\t' + user.getScore.ToString() + '\t' + user.getTime.ToString());
+                sw.WriteLine(user.getTime.ToString() + '\t' + user.getName + '\t' + user.getScore.ToString());
             }
             sw.Close();
         }
 
         //sort
         public void sortRecord() {
-            for (int i=1; i<userlist.Count;i++)
+            var path = "userRecord.txt";
+            using (StreamReader file = new StreamReader(path))
             {
-                if (userlist[i-1].getTime > userlist[i].getTime) {
-                    User temp = userlist[i-1];
-                    userlist[i-1] = userlist[i];
-                    userlist[i] = temp;
+                string ln;
+                while ((ln = file.ReadLine()) != null)
+                {
+                    Sorted.Add(ln);
                 }
+            }
+            if (Sorted.Count > 0)
+            {
+                Sorted.Sort();
+                System.IO.File.WriteAllText(path, string.Empty);
+                StreamWriter sw = File.AppendText(path);
+                foreach (string user in Sorted)
+                {
+                    sw.WriteLine(user);
+                }
+                sw.Close();
             }
         }
 
